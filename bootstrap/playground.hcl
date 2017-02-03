@@ -1,41 +1,50 @@
-gzl {
-    name = "line"
-    description = "Line Project"
+name = "gzl"
+description = "gzl continuous integration"
 
-    source {
-        src = "."
-        interval = 60
+source {
+  uri = "git://user@github.com/gzl-io/gzl"
+  # ideally there's a webhook or API available, but as a stopgap.
+  interval = 60
+}
+
+resources {
+  resource "local" {
+
+  }
+
+  resource "docker" {
+
+  }
+
+  resource "kubernetes" {
+
+  }
+}
+
+notify "slack" {
+  hook_uri = "https://..."
+}
+
+stage "build" {
+  command "go build" {
+    options = ["-a"]
+    output_filter = "grep -C 10 -i error"
+  }
+  notify_before = true
+}
+
+stage "test" {
+  tee {
+    command "go test" {
+      options = ["-run unit"]
     }
 
-    resources {
-        resource "local" {
-
-        }
-
-        resource "docker" {
-
-        }
-
-        resource "kubernetes" {
-
-        }
+    command "go test" {
+      options = ["-run component"]
     }
+  }
+}
 
-    stage "build" {
-        steps = [
-
-        ]
-    }
-
-    stage "test" {
-        steps = [
-
-        ]
-    }
-
-    stage "deploy" {
-        steps = [
-
-        ]
-    }
+stage "deploy" {
+  notify_after = true
 }
