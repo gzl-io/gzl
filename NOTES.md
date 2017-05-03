@@ -17,6 +17,11 @@
 - test planning and discovery
     - planning includes leveling runtime over parallel workers to optimize end
       to end runtime
+- run operations based on file change paths
+    - ie: if you added files to a `*/migrations/*` path, run db migrations
+    - requires ability for system to know how long since the last
+      run/deploy/... (could give raw access to that information in the form
+      of a git commit it was last run at)
 
 # attributes of services
 
